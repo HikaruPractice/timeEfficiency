@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+		<title>リアル時間効率</title>
+		<link rel="stylesheet" href="index.css">
+		<link rel="stylesheet" href="index2.css">
+		<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+		<![endif]-->
+		<script src="index.js"></script>
+	</head>
+
+	<body>
+		<div class="wrap">
+			<div class="counter">
+				<button class="countDisplay" onclick="timesAdd(+1)">0</button>
+				<button class="countMinus" onclick="timesAdd(-1)">減らす</button>
+			</div>
+			<table>
+				<tr>
+					<td class="colmun1">
+						スタート
+					</td>
+					<td>
+						<span id="startTime"></span>
+					</td>
+					<td class="colmun1">
+						経過時間
+					</td>
+					<td>
+
+						<span id="operatingTime"></span><span id="dot" style="color:white;">.</span><br>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						平均時間
+					</td>
+					<td>
+						<span id="averageTime">平均タイム</span><br>
+					</td>
+					<td>
+						時間平均
+					</td>
+					<td>
+						<span id="perMinute"></span>/min<br>
+						<span id="perHour"></span>/h<br>
+					</td>
+				</tr>
+			</table>
+			<button onclick="setStartTime()">開始</button>
+			<button onclick="fin()">終了</button><br>
+			<button onclick="timesAdd(+1)">+1</button>
+			<button onclick="timesAdd(+1)">-1</button><br>
+		</div>
+	</body>
+</html>
