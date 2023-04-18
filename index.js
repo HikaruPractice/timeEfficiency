@@ -112,6 +112,9 @@ function setAverage(){
 }
 
 function setPerHour(){
+    if (typeof operatingTime === 'undefined'){
+        return;
+    }
     if (times<=0){
         document.getElementById('perHour').textContent=0;
     }
