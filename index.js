@@ -1,43 +1,104 @@
-const startingTimeSerial = new Date("0001",1,1,0,0,0,0).getTime();
+
 let intervalID="";
-let startTime;
-let nowTime;
-let operatingTime;
+let startTime=null;
+let nowTime=null;
+let operatingTime=new Date(startingTimeSerial);
+let stopTime=null;
+let restartTime=null;
+let executionTime=new Date(startingTimeSerial);
 let times=0;
-let ave=0;
+let ave=new Date(startingTimeSerial);
 let perMinute=0;
 let perHour=0;
+let breaking = false;
+let nowBreakTime=new Date(startingTimeSerial);
+let totalBreakTime=new Date(startingTimeSerial);
+let allBreakTime=new Date(startingTimeSerial);
 
+let preBreakTime=new Date(startingTimeSerial);
 
-function fin(){
-    clearInterval(intervalID);
-    intervalID="";
-    update();
-}
-
-function setStartTime(){
-    if (intervalID==!""){
-        return;
-    }
+function start(){
+    document.getElementsByClassName("start")[0].style.display="none";
+    document.getElementsByClassName("restart")[0].style.display="none";
+    document.getElementsByClassName("stop")[0].style.display="block";
+    document.getElementsByClassName("reset")[0].style.display="block";
+    document.getElementsByClassName("reset")[0].disabled = true;
+    document.getElementById("countDisplay").disabled=false;
+    document.getElementById("countMinus").disabled=false;
     startTime = new Date();
-    let span = document.getElementById('startTime');
-    let timeArr =timeToArr(startTime);
-    span.textContent=( '00' + timeArr[3] ).slice( -2 )+":"+( '00' + timeArr[2] ).slice( -2 );
-    let span2 = document.getElementById('operatingTime');
-    span2.textContent="00m00s";
     intervalID=setInterval(update,500);
 }
 
-function setNowTime(){
-    nowTime= new Date();
+function restart(){
+    document.getElementsByClassName("start")[0].style.display="none";
+    document.getElementsByClassName("restart")[0].style.display="none";
+    document.getElementsByClassName("stop")[0].style.display="block";
+    document.getElementsByClassName("reset")[0].style.display="block";
+    document.getElementsByClassName("reset")[0].disabled = true;
+    restartTime = new Date();
+    setTimeDifference(preBreakTime,stopTime,restartTime);
+    totalBreakTime = timeAdd(totalBreakTime,preBreakTime);
+    allBreakTime.setTime(totalBreakTime.getTime());
+    breaking=false;
 }
 
+
+function fin(){
+    document.getElementsByClassName("start")[0].style.display="none";
+    document.getElementsByClassName("restart")[0].style.display="block";
+    document.getElementsByClassName("stop")[0].style.display="none";
+    document.getElementsByClassName("reset")[0].style.display="block";
+    document.getElementsByClassName("reset")[0].disabled = false;
+
+
+    stopTime=new Date();
+    update();
+    
+    breaking=true;
+}
+
+function reset(){
+    document.getElementsByClassName("start")[0].style.display="block";
+    document.getElementsByClassName("restart")[0].style.display="none";
+    document.getElementsByClassName("stop")[0].style.display="none";
+    document.getElementsByClassName("reset")[0].style.display="block";
+    document.getElementsByClassName("reset")[0].disabled = false;
+    document.getElementById("countDisplay").disabled=true;
+    document.getElementById("countMinus").disabled=true;
+    clearInterval(intervalID);
+    intervalID="";
+    breaking=false;
+
+    startTime=null;
+    nowTime=null;
+    operatingTime.setTime(startingTimeSerial);
+    stopTime=null;
+    restartTime=null;
+    executionTime.setTime(startingTimeSerial);
+    times=0;
+    ave=0;
+    perMinute=0;
+    perHour=0;
+    nowBreakTime.setTime(startingTimeSerial);
+    totalBreakTime.setTime(startingTimeSerial);
+    allBreakTime.setTime(startingTimeSerial);
+
+    preBreakTime.setTime(startingTimeSerial);
+
+    document.getElementById('dot').style.color='white';
+    document.getElementById('operatingTime').innerText="";
+    document.getElementsByClassName('countDisplay')[0].textContent=0;
+    document.getElementById('perMinute').textContent=0;
+    document.getElementById('perHour').textContent=0;
+
+}
+
+
 function setOperatingTime(){
-    if (typeof startTime === 'undefined'){
+    if (toString.call(operatingTime) !== '[object Date]'){
         return;
     }
-    let operatingTimeSerial = nowTime.getTime() - startTime.getTime();
-    operatingTime = new Date(startingTimeSerial+operatingTimeSerial);
+    operatingTime=timeSub(executionTime,allBreakTime);
     let timeArr=timeToArr(operatingTime);
     let text;
     if (timeArr[3]>=1){
@@ -54,61 +115,62 @@ function setOperatingTime(){
     span.innerText=text;
 }
 
-function timeToArr(DateObject){
-    //[FullYear,Month,Date,Hours,Minutes,Seconds,Milliseconds]
-    let arr = [];
-    arr[0]=DateObject.getTime() % 1000;
-    if (arr[0]<0){
-        arr[0]+=1000;
-    }
-    arr[1]=DateObject.getSeconds();
-    arr[2]=DateObject.getMinutes();
-    arr[3]=DateObject.getHours();
-    arr[4]=DateObject.getDate();
-    arr[5]=DateObject.getMonth();
-    arr[6]=DateObject.getFullYear();
-    return arr;
-}
+// function setBreakTime(){
+//     if (typeof startTime === 'undefined'){
+//         return;
+//     }
+//     breakTimeSerial = nowTime.getTime() - stopTime.getTime();
+//     operatingTime = new Date(startingTimeSerial+operatingTimeSerial);
+//     let timeArr=timeToArr(operatingTime);
+//     let text;
+//     if (timeArr[3]>=1){
+//         text=timeArr[3]+"h"+( '00' + timeArr[2] ).slice( -2 )+"m";
+//         if (timeArr[0]<500){
+//             document.getElementById('dot').style.color='black';
+//         }else{
+//             document.getElementById('dot').style.color='white';
+//         }
+//     }else{
+//         text=( '00' + timeArr[2] ).slice( -2 )+"m"+( '00' + timeArr[1] ).slice( -2 )+"s";
+//     }
+//     let span = document.gsetElementById('operatingTime');
+//     span.innerText=text;
+// }
 
-function timeFormat(DateObject,jikan = false){
-    let hours;
-    let minutes = DateObject.getMinutes();
-    let seconds = DateObject.getSeconds();
-    if (jikan){
-        hours = Math.floor((DateObject.getTime()-new Date(0001,1,1).getTime())/60/60/1000);
-        if(hours>0){
-            return hours+'時間'+minutes+'分'+seconds+'秒';
-        }else if(minutes>0){
-            return minutes+'分'+seconds+'秒';
-        }else if(seconds>=0){
-            return seconds+'秒';
-        }else{
-            return 0;
-        }
-    }else{
-        hours = DateObject;
-        return hours.getHours().toString().padStart(2,'0')+'時'+minutes.toString().padStart(2,'0')+'分'+seconds.toString().padStart(2,'0')+'秒';
-    }
-}
+
 
 function timesAdd(n){
     times+=n;
     document.getElementsByClassName('countDisplay')[0].textContent=times;
+    if(breaking){
     setAverage();
     setPerHour();
+    }
 }
 
 function setAverage(){
     
-    if (typeof operatingTime === 'undefined'){
+    if (toString.call(operatingTime) !== '[object Date]'){
         return;
     }
     if (times<=0){
         document.getElementById('averageTime').textContent=0;
+        ave.setTime(startingTimeSerial);
+        return;
     }
-    let time = operatingTime.getTime()-startingTimeSerial;
-    ave = new Date((time/times)+startingTimeSerial);
-    document.getElementById('averageTime').textContent=timeFormat(ave,true);
+    let aveTimeSerial
+    aveTimeSerial=(operatingTime.getTime()-startingTimeSerial)/times+startingTimeSerial;
+    ave.setTime(aveTimeSerial);
+    let timeArr=timeToArr(ave);
+    let text;
+    if (timeArr[3]>=1){
+        text=timeArr[3]+"h"+( '00' + timeArr[2] ).slice( -2 )+"m";
+    }else if(timeArr[2]>=1){
+        text=( '00' + timeArr[2] ).slice( -2 )+"m"+( '00' + timeArr[1] ).slice( -2 )+"s";
+    }    else{
+        text=( '00' + timeArr[1] ).slice( -2 )+"s";
+    }
+    document.getElementById('averageTime').textContent=text;
 }
 
 function setPerHour(){
@@ -125,17 +187,51 @@ function setPerHour(){
     document.getElementById('perMinute').textContent=Math.floor(perMinute*10)/10;
     document.getElementById('perHour').textContent=Math.floor(perHour*10)/10;
 }
-
 function update(){
-    setNowTime();
-    setOperatingTime();
+    nowTime= new Date();
+    setTimeDifference(executionTime,startTime,nowTime);
+    //setOperatingTime();
+    if (breaking){
+        setTimeDifference(nowBreakTime,stopTime,nowTime);
+        allBreakTime=timeAdd(totalBreakTime,nowBreakTime);
+    }else{
+    
+        setOperatingTime();
     setAverage();
     setPerHour();
+    }
+    debug();
 }
 
-function test(){
-    alert(timeFormat (new Date(startingTimeSerial+10000000)));
-    alert(timeFormat (new Date(startingTimeSerial+10000000),true));
+
+function debug(){
+    let timeArr;
+    timeArr =timeToArr(startTime);
+    gei('startTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"時"+( '00' + timeArr[2] ).slice( -2 )+"分"+( '00' + timeArr[1] ).slice( -2 )+"秒";
+    timeArr =timeToArr(nowTime);
+    gei('nowTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"時"+( '00' + timeArr[2] ).slice( -2 )+"分"+( '00' + timeArr[1] ).slice( -2 )+"秒";
+    timeArr =timeToArr(executionTime);
+    gei('proccec').textContent=( '00' + timeArr[3] ).slice( -2 )+"h"+( '00' + timeArr[2] ).slice( -2 )+"m"+( '00' + timeArr[1] ).slice( -2 )+"s";
+    timeArr =timeToArr(stopTime);
+    gei('breakTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"時"+( '00' + timeArr[2] ).slice( -2 )+"分"+( '00' + timeArr[1] ).slice( -2 )+"秒";
+    timeArr =timeToArr(restartTime);
+    gei('restartTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"時"+( '00' + timeArr[2] ).slice( -2 )+"分"+( '00' + timeArr[1] ).slice( -2 )+"秒";
+
+        timeArr=timeToArr(preBreakTime)
+        gei('preBreakTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"h"+( '00' + timeArr[2] ).slice( -2 )+"m"+( '00' + timeArr[1] ).slice( -2 )+"s";
+        
+    timeArr =timeToArr(nowBreakTime);
+    gei('nowBreakTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"h"+( '00' + timeArr[2] ).slice( -2 )+"m"+( '00' + timeArr[1] ).slice( -2 )+"s";
+    timeArr =timeToArr(totalBreakTime);
+    gei('totalBreakTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"h"+( '00' + timeArr[2] ).slice( -2 )+"m"+( '00' + timeArr[1] ).slice( -2 )+"s";
+    timeArr =timeToArr(allBreakTime);
+    gei('allBreakTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"h"+( '00' + timeArr[2] ).slice( -2 )+"m"+( '00' + timeArr[1] ).slice( -2 )+"s";
+    timeArr =timeToArr(operatingTime);
+    gei('opeTime').textContent=( '00' + timeArr[3] ).slice( -2 )+"h"+( '00' + timeArr[2] ).slice( -2 )+"m"+( '00' + timeArr[1] ).slice( -2 )+"s";
+}
+
+function gei(id){
+    return document.getElementById(id)
 }
 
 
@@ -165,3 +261,4 @@ function test(){
 //     console.log(timeFormat(new Date(0000,1,1,0,0,num)));
     
 // }
+

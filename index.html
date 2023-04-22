@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 	<head>
@@ -10,51 +11,59 @@
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
 		<![endif]-->
+		<script src="time.js"></script>
 		<script src="index.js"></script>
 	</head>
 
 	<body>
+		<!--24時間以上は対応していない-->
+		<!--差の計算が24時間以上だと狂う-->
 		<div class="wrap">
 			<div class="counter">
-				<button class="countDisplay" onclick="timesAdd(+1)">0</button>
-				<button class="countMinus" onclick="timesAdd(-1)">減らす</button>
+				<button id="countDisplay" class="countDisplay" onclick="timesAdd(+1)" disabled>0</button>
+				<button class="aaa countMinus" onclick="timesAdd(+400)">+400</button>
+				<button class="aaa countMinus" onclick="timesAdd(+100)">+100</button>
+				<button class="aaa countMinus" onclick="timesAdd(+50)">+50</button>
+				<button id="countMinus" class="countMinus" onclick="timesAdd(-1)" disabled>減らす</button>
+				<button class="aaa countMinus" onclick="timesAdd(-400)">-400</button>
+				<button class="aaa countMinus" onclick="timesAdd(-100)">-100</button>
+				<button class="aaa countMinus" onclick="timesAdd(-50)">-50</button>
 			</div>
 			<table>
 				<tr>
-					<td class="colmun1">
-						スタート
-					</td>
 					<td>
-						<span id="startTime"></span>
-					</td>
-					<td class="colmun1">
-						経過時間
-					</td>
-					<td>
-
 						<span id="operatingTime"></span><span id="dot" style="color:white;">.</span><br>
 					</td>
+					<td>
+						<span style="display: inline-block;">
+							<span id="perMinute"></span>/min<br>
+							<span id="perHour"></span>/h<br></span>
+					</td>
 				</tr>
+
 				<tr>
 					<td>
-						平均時間
+						
 					</td>
 					<td>
-						<span id="averageTime">平均タイム</span><br>
-					</td>
-					<td>
-						時間平均
-					</td>
-					<td>
-						<span id="perMinute"></span>/min<br>
-						<span id="perHour"></span>/h<br>
+						<span id="averageTime"></span>/回<br>
 					</td>
 				</tr>
 			</table>
-			<button onclick="setStartTime()">開始</button>
-			<button onclick="fin()">終了</button><br>
-			<button onclick="timesAdd(+1)">+1</button>
-			<button onclick="timesAdd(+1)">-1</button><br>
+			<button onclick="start()" class="countMinus start">開始</button>
+			<button onclick="restart()" class="countMinus restart" >再開</button>
+			<button onclick="fin()" class="countMinus stop">停止/休憩</button>
+			<button onclick="reset()" class="countMinus reset">リセット</button>
+			開始時刻:<span id="startTime"></span><br>
+			現在時刻:<span id="nowTime"></span><br>
+			実行時間:<span id="proccec"></span><br>
+			休憩時刻:<span id="breakTime"></span><br>
+			再開時刻:<span id="restartTime"></span><br>
+			前回休憩時間:<span id="preBreakTime"></span><br>
+			累積休憩時間:<span id="totalBreakTime"></span><br>
+			休憩中時間:<span id="nowBreakTime"></span><br>
+			休憩時間:<span id="allBreakTime"></span><br>
+			稼働時間:<span id="opeTime"></span><br>
 		</div>
 	</body>
 </html>
