@@ -90,5 +90,18 @@ td{
 .setting button{
     font-size: 10px;
     height: 20px;
+    width: 40px;
+    display: inline-block;
+}
+.setting .setNow{
     width: 60px;
+}
+.settingTable{
+    table-layout: auto;
+    border: none;
+    font-size: 10px;
+}
+.settingTable tr,.settingTable td{
+    text-align: left;
+    font-size: 10px;
 }

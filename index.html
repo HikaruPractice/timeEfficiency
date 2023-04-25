@@ -87,24 +87,42 @@
 					<td><span id="operatingRate"></span></td>
 				</tr>
 			</table>
+			<hr>
 			<div class="setting">
-				
-			開始時刻：
-			<button onclick="inputStartTime(-60)">-1h</button>
-			<button onclick="inputStartTime(-10)">-10m</button>
-			<button onclick="inputStartTime(-1)">-1m</button>
-			<button onclick="inputStartTime()">現在時刻</button><br>
-			休憩時間：
-			<span style="display: inline-block;">
-				<button onclick="inputBreakTime(+60)">+1h</button>
-				<button onclick="inputBreakTime(+10)">+10m</button>
-				<button onclick="inputBreakTime(+1)">+1m</button><br>
-				<button onclick="inputBreakTime(-60)">-1h</button>
-				<button onclick="inputBreakTime(-10)">-10m</button>
-				<button onclick="inputBreakTime(-1)">-1m</button>
-			</span><br>
-			回数:<input type="text" id="setTimes">
-			<button onclick="inputTimes()">設定</button>
+				<table class="settingTable">
+					<caption>手動入力</caption>
+					<tr>
+						<td>開始時刻：</td>
+						<td>
+							<button onclick="inputStartTime(-60)">-1h</button>
+							<button onclick="inputStartTime(-10)">-10m</button>
+							<button onclick="inputStartTime(-1)">-1m</button>
+							<button onclick="inputStartTime()" class="setNow">現在時刻</button>
+						</td>
+					</tr>
+					<tr>
+						<td>休憩時間：</td>
+						<td>
+
+							<button onclick="inputBreakTime(+60)">+1h</button>
+							<button onclick="inputBreakTime(+10)">+10m</button>
+							<button onclick="inputBreakTime(+1)">+1m</button><br>
+							<button onclick="inputBreakTime(-60)">-1h</button>
+							<button onclick="inputBreakTime(-10)">-10m</button>
+							<button onclick="inputBreakTime(-1)">-1m</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							回数:
+						</td>
+						<td>
+							<input type="text" id="setTimes">
+							<button onclick="inputTimes()">設定</button>
+						</td>
+					</tr>
+				</table>
+
 			
 		</div>
 			<div style="display: none;">
