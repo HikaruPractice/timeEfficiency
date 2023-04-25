@@ -38,6 +38,14 @@ table{
     font-size:12px;
     border: solid 1px ;
 }
+.detail caption{
+    font-size: 10px;
+}
+
+.detail th,.detail td{
+    font-size: 10px;
+    height: 15px;
+}
 
 .colmun1{
     width: 50px;
@@ -70,4 +78,17 @@ td{
     width : calc(100% / 3);
     height: 30px;
     font-size: 15px;
+}
+.checkbox{
+    font-size: 15px;
+}
+
+.setting{
+    font-size: 10px;
+}
+
+.setting button{
+    font-size: 10px;
+    height: 20px;
+    width: 60px;
 }
