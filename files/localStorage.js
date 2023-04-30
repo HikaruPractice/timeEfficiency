@@ -8,6 +8,7 @@ function localSave(){
     }
     let datas = {
         times:times,
+        points:points,
         breaking:breaking,
         startTimeSerial:cts(startTime),
         stopTimeSerial:cts(stopTime),
@@ -26,7 +27,9 @@ function localSave_ifChecked(){
 function localLoad(){
     reset(true);
     const datas = JSON.parse(localStorage.getItem(savename));
-
+    if (datas === null){
+        return;
+    }
     breaking=datas.breaking;
     if (breaking === null){
         return;
@@ -48,6 +51,9 @@ function localLoad(){
     restartTime=cto(datas.restartTimeSerial);
     totalBreakTime=cto(datas.totalBreakTimeSerial);
     timesAdd(datas.times);
+    if (datas.points>0){
+        pointsAdd(datas.points);
+    }
     if(breaking){
         fin2();
     }else{
@@ -66,38 +72,7 @@ function localClear(){
     document.getElementById('checkbox').checked = true;
 }
 
-function restart2(){
-    document.getElementsByClassName("start")[0].style.display="none";
-    document.getElementsByClassName("restart")[0].style.display="none";
-    document.getElementsByClassName("stop")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].disabled = true;
-}
-function fin2(){
-    document.getElementsByClassName("start")[0].style.display="none";
-    document.getElementsByClassName("restart")[0].style.display="block";
-    document.getElementsByClassName("stop")[0].style.display="none";
-    document.getElementsByClassName("reset")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].disabled = false;
 
-}
-
-function update2(){
-    nowTime= new Date();
-    setTimeDifference(executionTime,startTime,nowTime);
-
-    if (breaking){
-        setTimeDifference(nowBreakTime,stopTime,nowTime);
-        allBreakTime=timeAdd(totalBreakTime,nowBreakTime);
-    }else{
-        allBreakTime.setTime(totalBreakTime);
-    }
-    setOperatingTime();
-    setAverage();
-    setPerHour();
-    displayTime();
-    //debug();
-}
 
 function checkboxChenge(){
     if (document.getElementById('checkbox').checked){

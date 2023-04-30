@@ -7,6 +7,7 @@ let stopTime=null;
 let restartTime=null;
 let executionTime=new Date(startingTimeSerial);
 let times=0;
+let points=0;
 let breaking = false;
 let nowBreakTime=new Date(startingTimeSerial);
 let totalBreakTime=new Date(startingTimeSerial);
@@ -14,87 +15,7 @@ let allBreakTime=new Date(startingTimeSerial);
 
 let preBreakTime=new Date(startingTimeSerial);
 
-function start(){
-    document.getElementsByClassName("start")[0].style.display="none";
-    document.getElementsByClassName("restart")[0].style.display="none";
-    document.getElementsByClassName("stop")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].disabled = true;
-    document.getElementById("countDisplay").disabled=false;
-    document.getElementById("countMinus").disabled=false;
-    startTime = new Date();
-    breaking=false;
-    localSave_ifChecked();
-    intervalID=setInterval(update,500);
 
-}
-
-function restart(){
-    document.getElementsByClassName("start")[0].style.display="none";
-    document.getElementsByClassName("restart")[0].style.display="none";
-    document.getElementsByClassName("stop")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].disabled = true;
-    restartTime = new Date();
-    setTimeDifference(preBreakTime,stopTime,restartTime);
-    totalBreakTime = timeAdd(totalBreakTime,preBreakTime);
-    allBreakTime.setTime(totalBreakTime.getTime());
-    breaking=false;
-    localSave_ifChecked();
-}
-
-
-function fin(){
-    document.getElementsByClassName("start")[0].style.display="none";
-    document.getElementsByClassName("restart")[0].style.display="block";
-    document.getElementsByClassName("stop")[0].style.display="none";
-    document.getElementsByClassName("reset")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].disabled = false;
-
-
-    stopTime=new Date();
-    update();
-    
-    breaking=true;
-    localSave_ifChecked();
-}
-
-function reset(loadmode=false){
-    document.getElementsByClassName("start")[0].style.display="block";
-    document.getElementsByClassName("restart")[0].style.display="none";
-    document.getElementsByClassName("stop")[0].style.display="none";
-    document.getElementsByClassName("reset")[0].style.display="block";
-    document.getElementsByClassName("reset")[0].disabled = false;
-    document.getElementById("countDisplay").disabled=true;
-    document.getElementById("countMinus").disabled=true;
-    if (intervalID!==""){
-    clearInterval(intervalID);
-    intervalID="";
-    }
-    breaking=false;
-
-    startTime=null;
-    nowTime=null;
-    operatingTime.setTime(startingTimeSerial);
-    stopTime=null;
-    restartTime=null;
-    executionTime.setTime(startingTimeSerial);
-    times=0;
-    nowBreakTime.setTime(startingTimeSerial);
-    totalBreakTime.setTime(startingTimeSerial);
-    allBreakTime.setTime(startingTimeSerial);
-
-    preBreakTime.setTime(startingTimeSerial);
-
-    document.getElementById('dot').style.color='white';
-    document.getElementById('operatingTime').innerText="";
-    document.getElementsByClassName('countDisplay')[0].textContent=0;
-    document.getElementById('perMinute').textContent=0;
-    document.getElementById('perHour').textContent=0;
-    if (!loadmode){
-        localRemove();
-    }
-}
 
 
 function setOperatingTime(){
@@ -149,7 +70,7 @@ function setOperatingTime(){
 
 
 
-function timesAdd(n){
+function timesAdd(n = 1){
     times+=n;
     document.getElementsByClassName('countDisplay')[0].textContent=times;
     if(breaking){
@@ -214,7 +135,11 @@ function setPerHour(){
         return;
     }
     if (times<=0){
+        document.getElementById('perMinute').textContent=0;
         document.getElementById('perHour').textContent=0;
+        document.getElementById('perMinute2').textContent=0;
+        document.getElementById('perHour2').textContent=0;
+        return;
     }
     let minute = (operatingTime.getTime()-startingTimeSerial)/1000/60;
     let hour = minute/60;
@@ -227,30 +152,12 @@ function setPerHour(){
     if (typeof executionTime === 'undefined'){
         return;
     }
-    if (times<=0){
-        document.getElementById('perHour2').textContent=0;
-    }
     let minute2 = (executionTime.getTime()-startingTimeSerial)/1000/60;
     let hour2 = minute2/60;
     let perMinute2 = times/minute2;
     let perHour2 = times/hour2;
     document.getElementById('perMinute2').textContent=Math.floor(perMinute2*10)/10;
     document.getElementById('perHour2').textContent=Math.floor(perHour2*10)/10;
-}
-function update(){
-    nowTime= new Date();
-    setTimeDifference(executionTime,startTime,nowTime);
-    if (breaking){
-        setTimeDifference(nowBreakTime,stopTime,nowTime);
-        allBreakTime=timeAdd(totalBreakTime,nowBreakTime);
-    }else{
-    
-    setOperatingTime();
-    }
-    //debug();
-    setAverage();
-    setPerHour();
-    displayTime();
 }
 
 function displayTime(){
