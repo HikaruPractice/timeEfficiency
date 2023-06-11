@@ -27,8 +27,8 @@
 		<!--差の計算が24時間以上だと狂う-->
 		<div class="wrap">
 			<div class="counter">
-				<button id="countDisplay" class="countDisplay" onclick="timesAdd(+1)" disabled>0</button>
-				<button id="countMinus" class="countMinus" onclick="timesAdd(-1)" disabled>減らす</button>
+				<button id="countDisplay" class="countDisplay" onclick="timesAdd(+1);pushed('countDisplay');" disabled>0</button>
+				<button id="countMinus" class="countMinus" onclick="timesAdd(-1);pushed('countMinus')" disabled>減らす</button>
 			</div>
 			<table>
 				<tr>
