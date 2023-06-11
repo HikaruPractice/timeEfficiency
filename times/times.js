@@ -127,3 +127,12 @@ function update2(){
     displayTime();
     //debug();
 }
+function pushed(id){
+    let display=    document.getElementById(id);
+    if(display.style.color!=="red"){
+        display.style.color="red";
+        window.setTimeout(() => {
+            display.style.color="";
+        }, 90000);
+    }
+}
